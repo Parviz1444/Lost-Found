@@ -1,15 +1,1 @@
-{
-  "buildCommand": "python manage.py migrate --noinput && python manage.py collectstatic --noinput",
-  "builds": [
-    {
-      "src": "config/wsgi.py",
-      "use": "@vercel/python"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "config/wsgi.py"
-    }
-  ]
-}
+{}
