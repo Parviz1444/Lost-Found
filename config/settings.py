@@ -146,3 +146,10 @@ LOGOUT_REDIRECT_URL = '/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+# Uploaded media is persistent on Vercel when a Blob store is connected.
+if os.environ.get("VERCEL") == "1":
+    STORAGES = {
+        "default": {"BACKEND": "adds.storage.VercelBlobStorage"},
+        "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+    }
