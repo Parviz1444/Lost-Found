@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Post form{% endblock title %}
+
+{% block content %}
+<div class="col-6 mx-auto">
+  <h1 class="text-center">Add post</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button class="btn btn-secondary me-3" type="submit">Save</button>
+    <a class="btn btn-outline-secondary" href="{% url 'home' %}">Back</a>
+  </form>
+</div>
+{% endblock content %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Messages{% endblock title %}
+{% block content %}
+<section class="inbox-page">
+  <div class="inbox-heading"><div><p class="eyebrow">YOUR INBOX</p><h1>Messages</h1><p>Conversations about listings you posted or contacted someone about.</p></div></div>
+  <div class="inbox-list">
+    {% for conversation in conversations %}
+    <a class="inbox-item" href="{% url 'message' conversation.post.slug %}?with={{ conversation.person.id }}">
+      <span class="chat-avatar">{{ conversation.person.username|slice:":1"|upper }}</span>
+      <span class="inbox-copy"><strong>{{ conversation.person.username }}</strong><small>{{ conversation.post.title }}</small><span>{% if conversation.latest.sender_id == user.id %}You: {% endif %}{{ conversation.latest.body|truncatechars:75 }}</span></span>
+      <span class="inbox-meta"><small>{{ conversation.latest.created_at|date:"M j, H:i" }}</small>{% if conversation.unread %}<b class="inbox-unread">{{ conversation.unread }}</b>{% endif %}</span>
+    </a>
+    {% empty %}
+    <div class="inbox-empty"><i class="bi bi-chat-square-text"></i><strong>No conversations yet</strong><span>Open a listing and select Message to contact its author.</span></div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock content %}

@@ -1,0 +1,67 @@
+{% extends "base.html" %} 
+
+{% load static %} 
+
+{% block title %}
+
+{{ post.title }} · Find or Found {% endblock title %}
+
+{% block content %}
+
+<a class="back-link" href="{% url 'home' %}"><i class="bi bi-arrow-left"></i> Back to all listings</a>
+<article class="detail-card">
+  <div class="row g-0">
+    <div class="col-lg-6 detail-media">
+      {% if post.image %}
+      <img
+        class="detail-image"
+        src="{{ post.image.url }}"
+        alt="{{ post.title }}"
+      />
+      {% else %}
+      <div class="detail-placeholder">
+        <img
+          src="{% static 'images/not_found.png' %}"
+          alt="No photo available"
+        /><span>No photos yet</span>
+      </div>
+      {% endif %}
+    </div>
+    <div class="col-lg-6 detail-content">
+      <p class="eyebrow">Listing</p>
+      <h1>{{ post.title }}</h1>
+      <div class="detail-meta">
+        <span>
+          <i class="bi bi-calendar3"></i> {{ post.created_at|date:"d E Y"}}
+        </span>{% if post.author %}
+        <span>
+          <i class="bi bi-person-circle"></i> {{ post.author.username }}
+        </span>
+        {% endif %}
+      </div>
+      <hr />
+      <h2>Description</h2>
+      <p class="detail-description">{{ post.content|linebreaksbr }}</p>
+      {% if user.is_authenticated and post.author == user %}
+      <div class="post-actions">
+        <a href="{% url 'post_edit' post.slug %}" class="btn btn-dark">
+          <i class="bi bi-pencil"> Edit</i>
+        </a>
+        <a href="{% url 'post_delete' post.slug %}" class="btn btn-danger">
+          <i class="bi bi-trash"> Delete</i>
+        </a>
+      </div>
+      {% elif user.is_authenticated %}
+      <a href="{% url 'message' post.slug %}" class="btn btn-dark">
+          <i class="bi bi-chat"> Message</i>
+        </a>
+      {% else %}
+      <a href="{% url 'login' %}?next={% url 'message' post.slug %}" class="btn btn-dark">
+          <i class="bi bi-chat"> Message</i>
+        </a>
+      {% endif %}
+    </div>
+
+  </div>
+</article>
+{% endblock content %}

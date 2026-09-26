@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Listings · Find or Found{% endblock title %}
+
+{% block content %}
+<section class="listing-toolbar">
+    <div>
+        <p class="eyebrow">Lost & found</p>
+        <h1 class="page-title">Lost and found items</h1>
+        <p class="page-subtitle">Browse community listings or find your own item.</p>
+    </div>
+    <form class="search-form" role="search" method="get">
+        {% if mine == "1" %}<input type="hidden" name="mine" value="1">{% endif %}
+        <i class="bi bi-search"></i>
+        <input class="form-control" name="q" value="{{ q|default:'' }}" type="search" placeholder="Search listings" aria-label="Search listings"/>
+        <button class="btn btn-dark" type="submit">Search</button>
+    </form>
+</section>
+
+{% if user.is_authenticated %}
+<nav class="listing-tabs" aria-label="Listing filter">
+    <a class="listing-tab {% if mine != '1' %}active{% endif %}" href="{% url 'home' %}"><i class="bi bi-grid-3x3-gap"></i> All listings</a>
+    <a class="listing-tab {% if mine == '1' %}active{% endif %}" href="{% url 'home' %}?mine=1"><i class="bi bi-bookmark-heart"></i> My listings</a>
+</nav>
+{% endif %}
+
+<div class="row g-4 listing-grid">
+    {% for post in posts %}
+    <div class="col-sm-6 col-lg-4">
+      <article class="card post-card h-100">
+        <a class="post-card-image" href="{% url 'post_detail' post.slug %}" aria-label="Open: {{ post.title }}">
+          {% if post.image %}
+          <img src="{{ post.image.url }}" alt="{{ post.title }}">
+          {% else %}
+          <img src="{% static 'images/not_found.png' %}" alt="No photo available">
+          {% endif %}
+          <span class="photo-chip"><i class="bi bi-image"></i> {% if post.image %}Photo available{% else %}No photo{% endif %}</span>
+        </a>
+        <div class="card-body post-card-body">
+            <p class="post-meta"><i class="bi bi-clock"></i> {{ post.created_at|date:"d.m.Y" }}</p>
+            <h2 class="card-title">{{ post.title }}</h2>
+            <p class="card-text">{{ post.content|truncatechars:115 }}</p>
+            <a href="{% url 'post_detail' post.slug %}" class="details-link">View details <i class="bi bi-arrow-up-right"></i></a>
+        </div>
+      </article>
+    </div>
+    {% empty %}
+    <div class="col-12"><div class="empty-state"><i class="bi bi-search"></i><h2>Nothing found</h2><p>Try changing the search term or browsing all listings.</p></div></div>
+    {% endfor %}
+</div>
+{% endblock content %}
